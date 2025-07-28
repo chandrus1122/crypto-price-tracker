@@ -1,0 +1,38 @@
+.crypto-card {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.crypto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.crypto-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.crypto-card h2 {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+.crypto-card p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+.crypto-card .positive {
+  color: #4caf50; /* Green for positive */
+}
+
+.crypto-card .negative {
+  color: #f44336; /* Red for negative */
+}

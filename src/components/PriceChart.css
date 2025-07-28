@@ -1,0 +1,36 @@
+.price-chart-container {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  margin: 40px auto;
+  color: white;
+  max-width: 800px;
+}
+
+.price-chart-container h3 {
+  margin-bottom: 15px;
+}
+
+.range-buttons {
+  margin-bottom: 20px;
+}
+
+.range-buttons button {
+  margin-right: 10px;
+  padding: 6px 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.range-buttons button.active {
+  background-color: #4caf50;
+}
+
+.chart-wrapper {
+  height: 300px;
+}

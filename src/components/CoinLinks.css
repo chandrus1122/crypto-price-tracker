@@ -1,0 +1,33 @@
+.coin-links-container {
+  margin-top: 30px;
+  text-align: center;
+  background-color: rgb(89, 85, 85);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.coin-links-heading {
+  color: rgb(245, 233, 233);
+  margin-bottom: 16px;
+}
+
+.coin-links-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.coin-link {
+  color: rgb(176, 164, 164);
+  text-decoration: none;
+  border: 1px solid rgba(242, 234, 234, 0);
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.coin-link:hover {
+  background-color: #333;
+  color: white;
+}

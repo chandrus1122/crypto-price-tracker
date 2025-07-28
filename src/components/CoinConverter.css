@@ -1,0 +1,46 @@
+.converter-container {
+  position: relative;
+  background-image: url('https://m.foolcdn.com/media/dubs/images/original_imagesoriginal_imageshttpsg.foolcdn.c.width-880_SfbkM9V.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  margin: 40px auto;
+  padding: 40px 20px;
+  max-width: 500px;
+  color: white;
+  overflow: hidden;
+}
+
+.converter-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+  border-radius: 12px;
+}
+
+.converter-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.converter-input {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 6px;
+  width: 100px;
+}
+
+.converter-select {
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.converter-result {
+  margin-top: 15px;
+  font-size: 18px;
+}
