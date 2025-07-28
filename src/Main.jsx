@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom'; // ✅ updated
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import App from './App'; // ✅ Import your main app component
-import './index.css'; // ✅ Optional CSS import
+import App from './App';
+import './index.css';
 
 const queryClient = new QueryClient();
 
@@ -16,5 +16,4 @@ const Main = () => (
   </QueryClientProvider>
 );
 
-// Mount the app
 ReactDOM.createRoot(document.getElementById('root')).render(<Main />);
