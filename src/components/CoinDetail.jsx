@@ -11,7 +11,8 @@ import CoinLinks from './CoinLinks';
 
 import './CoinDetail.css';
 
-const fetchCoin = async (id) => {
+const fetchCoin = async ({ queryKey }) => {
+  const [_key, id] = queryKey;
   const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
   return res.data;
 };
@@ -24,7 +25,9 @@ const CoinDetail = () => {
     isLoading,
     isError,
     refetch,
-  } = useQuery(['coin', id], () => fetchCoin(id), {
+  } = useQuery({
+    queryKey: ['coin', id],
+    queryFn: fetchCoin,
     refetchInterval: 30000,
     refetchOnWindowFocus: false,
   });
@@ -49,7 +52,10 @@ const CoinDetail = () => {
         <p
           className="coin-change"
           style={{
-            color: coin.market_data?.price_change_percentage_24h >= 0 ? 'lightgreen' : 'salmon',
+            color:
+              coin.market_data?.price_change_percentage_24h >= 0
+                ? 'lightgreen'
+                : 'salmon',
           }}
         >
           <strong>24h Change:</strong>{' '}
