@@ -1,39 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+
 import PriceChart from './PriceChart';
 import TokenMetrics from './TokenMetrics';
 import CoinAbout from './CoinAbout';
 import CoinConverter from './CoinConverter';
 import CoinLinks from './CoinLinks';
+
 import './CoinDetail.css';
+
+const fetchCoin = async (id) => {
+  const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
+  return res.data;
+};
 
 const CoinDetail = () => {
   const { id } = useParams();
-  const [coin, setCoin] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const intervalRef = useRef(null);
 
-  const fetchCoin = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`);
-      setCoin(res.data);
-    } catch (error) {
-      console.error('Loading coin data...', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: coin,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery(['coin', id], () => fetchCoin(id), {
+    refetchInterval: 30000,
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    fetchCoin();
-    intervalRef.current = setInterval(() => fetchCoin(), 30000);
-    return () => clearInterval(intervalRef.current);
-  }, [id]);
-
-  if (loading) return <p className="coin-loading">Loading coin data...</p>;
-  if (!coin) return <p className="coin-loading">Loading coin details...</p>;
+  if (isLoading) return <p className="coin-loading">Loading coin data...</p>;
+  if (isError || !coin) return <p className="coin-loading">Error loading coin details...</p>;
 
   return (
     <div className="coin-detail-container">
@@ -62,7 +59,7 @@ const CoinDetail = () => {
           <strong>Market Cap:</strong>{' '}
           ${coin.market_data?.market_cap?.usd?.toLocaleString() || 'N/A'}
         </p>
-        <button onClick={fetchCoin} className="refresh-button">
+        <button onClick={refetch} className="refresh-button">
           🔄 Refresh Data
         </button>
       </div>
