@@ -9,21 +9,22 @@ const Highlights = () => {
 
   const fetchData = async () => {
     try {
-      // ✅ Trending from CoinGecko
-      const trendingRes = await axios.get('https://api.coingecko.com/api/v3/search/trending');
-      const trendingCoins = trendingRes.data.coins.map(c => c.item);
-      setTrending(trendingCoins.slice(0, 3));
-
-      // ✅ Gainers from Coinpaprika
       const res = await axios.get('https://api.coinpaprika.com/v1/tickers');
       const allCoins = res.data;
 
-      const sorted = allCoins
+      // Trending: top 3 by 24h volume
+      const trendingSorted = allCoins
+        .filter(c => c.quotes?.USD?.volume_24h !== null)
+        .sort((a, b) => b.quotes.USD.volume_24h - a.quotes.USD.volume_24h)
+        .slice(0, 3);
+      setTrending(trendingSorted);
+
+      // Gainers: top 3 by 24h percentage gain
+      const gainersSorted = allCoins
         .filter(c => c.quotes?.USD?.percent_change_24h !== null)
         .sort((a, b) => b.quotes.USD.percent_change_24h - a.quotes.USD.percent_change_24h)
         .slice(0, 3);
-
-      setGainers(sorted);
+      setGainers(gainersSorted);
     } catch (err) {
       console.error('Highlights fetch error:', err);
     }
@@ -51,12 +52,17 @@ const Highlights = () => {
             {trending.map((coin, i) => (
               <li key={i} style={styles.listItem}>
                 <Link to={`/coin/${coin.id}`} style={styles.itemLink}>
-                  <img src={coin.thumb} alt={coin.name} style={styles.icon} />
+                  <img
+                    src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
+                    onError={(e) => (e.target.style.display = 'none')}
+                    alt={coin.name}
+                    style={styles.icon}
+                  />
                   <div style={styles.textGroup}>
                     <span style={styles.name}>{coin.name}</span>
                     <span style={styles.symbol}>{coin.symbol.toUpperCase()}</span>
                   </div>
-                  <span style={styles.price}>${coin.price_btc.toFixed(8)}</span>
+                  <span style={styles.price}>${coin.quotes.USD.price.toFixed(4)}</span>
                 </Link>
               </li>
             ))}
