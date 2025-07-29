@@ -1,52 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+const fetchTrending = async () => {
+  const res = await axios.get('https://api.coingecko.com/api/v3/search/trending');
+  return res.data.coins.map(c => c.item).slice(0, 3);
+};
+
+const fetchGainers = async () => {
+  const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+    params: {
+      vs_currency: 'usd',
+      order: 'market_cap_desc',
+      per_page: 50,
+      page: 1,
+      price_change_percentage: '24h',
+    },
+  });
+  return res.data
+    .filter(c => c.price_change_percentage_24h !== null)
+    .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h)
+    .slice(0, 3);
+};
 
 const Highlights = () => {
-  const [trending, setTrending] = useState([]);
-  const [gainers, setGainers] = useState([]);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const {
+    data: trending = [],
+    isLoading: trendingLoading,
+    isError: trendingError,
+  } = useQuery(['trending'], fetchTrending, {
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const fetchData = async () => {
-    try {
-      // Fetch trending coins
-      const trendingRes = await axios.get('https://api.coingecko.com/api/v3/search/trending');
-      const trendingCoins = trendingRes.data.coins.map(c => c.item);
-      setTrending(trendingCoins.slice(0, 3));
+  const {
+    data: gainers = [],
+    isLoading: gainersLoading,
+    isError: gainersError,
+  } = useQuery(['gainers'], fetchGainers, {
+    staleTime: 1000 * 60 * 5,
+  });
 
-      // Fetch top gainers
-      const gainersRes = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
-        params: {
-          vs_currency: 'usd',
-          order: 'market_cap_desc',
-          per_page: 50,
-          page: 1,
-          price_change_percentage: '24h',
-        },
-      });
-
-      const gainersSorted = gainersRes.data
-        .filter(c => c.price_change_percentage_24h !== null)
-        .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h)
-        .slice(0, 3);
-
-      setGainers(gainersSorted);
-    } catch (err) {
-      console.error('Highlights fetch error:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [refreshTrigger]);
-
-  const handleRefresh = () => {
-    setRefreshTrigger(prev => prev + 1);
-  };
+  if (trendingLoading || gainersLoading) return <p style={{ color: 'white' }}>Loading Highlights...</p>;
+  if (trendingError || gainersError) return <p style={{ color: 'red' }}>Error loading highlights data.</p>;
 
   return (
     <div style={styles.wrapper}>
-     
       <div style={styles.container}>
         {/* Trending Section */}
         <div style={styles.card}>
@@ -99,16 +98,6 @@ const styles = {
     backgroundColor: 'black',
     padding: '20px',
     textAlign: 'center',
-  },
-  refreshBtn: {
-    backgroundColor: '#1e88e5',
-    color: 'white',
-    border: 'none',
-    padding: '10px 16px',
-    fontSize: '14px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    marginBottom: '24px',
   },
   container: {
     display: 'flex',
