@@ -35,3 +35,4 @@ Install gh-pages  development dependency in vs code:  npm install --save-dev gh-
 deploy:  npm run deploy,
 build:  npm run build,
 use pages in Github with source(Depoly from a branch),branch(gh-pages and (/root)) for live Deployment
+Live Deployment link:   https://chandrus1122.github.io/crypto-price-tracker/
